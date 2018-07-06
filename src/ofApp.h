@@ -40,6 +40,6 @@ class ofApp : public ofBaseApp{
     
     // for ofxBox2D
     ofxBox2d box2d;
-    vector <shared_ptr<ofxBox2dCircle> > circles;
+    vector <shared_ptr<CustomCircle> > circles;
     vector <shared_ptr<ofxBox2dCircle> > contourCircles;
 };

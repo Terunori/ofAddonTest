@@ -1,4 +1,5 @@
 #include "ofApp.h"
+int flag=0;
 
 //--------------------------------------------------------------
 void ofApp::setup(){
@@ -18,18 +19,19 @@ void ofApp::setup(){
     box2d.init();
     // gravity: downward, 5 units
     box2d.setGravity(0,1);
-    box2d.createBounds(0,0,colorImg.width, colorImg.height);
-    box2d.setFPS(30);
+    box2d.createBounds(0,0,grayImg.width, grayImg.height);
+    box2d.setFPS(90);
     box2d.checkBounds(true);
     box2d.registerGrabbing();
     
     // set 1000 Customcircles
-    static const int NUM = 1000;
+    static const int NUM = 400;
     for (int i=0;i<NUM;i++){
-        shared_ptr<ofxBox2dCircle> circle = shared_ptr<ofxBox2dCircle>(new ofxBox2dCircle);
+        shared_ptr<CustomCircle> circle = shared_ptr<CustomCircle>(new CustomCircle);
         
-        circle.get()->setPhysics(1.0, 0.8, 0.0);
-        circle.get()->setup(box2d.getWorld(), ofRandom(colorImg.width), ofRandom(colorImg.height), 3);
+        // mass, repulsion, friction
+        circle.get()->setPhysics(1.2, 0.85, 0.0);
+        circle.get()->setup(box2d.getWorld(), ofRandom(0,grayImg.width), ofRandom(0,grayImg.height), 3);
         
         circles.push_back(circle);
     }
@@ -64,14 +66,14 @@ void ofApp::update(){
         contourCircles.clear();
         // analyse Blob: objects
         for (int i=0; i<contourFinder.nBlobs; i++) {
-            for (int j=0;j<contourFinder.blobs[i].pts.size(); j+=4) {
+            for (int j=0;j<contourFinder.blobs[i].pts.size(); j+=3) {
                 // regular intervals
                 ofPoint pos = contourFinder.blobs[i].pts[j];
                 // add circle
                 shared_ptr<ofxBox2dCircle> circle = shared_ptr<ofxBox2dCircle>(new ofxBox2dCircle);
                 
-                circle.get()->setPhysics(1.0, 0.8, 0.0);
-                circle.get()->setup(box2d.getWorld(), pos.x, pos.y, 4);
+                circle.get()->setPhysics(5.0, 0.6, 0.3);
+                circle.get()->setup(box2d.getWorld(), pos.x, pos.y, 3);
                 
                 contourCircles.push_back(circle);
             }
@@ -89,7 +91,11 @@ void ofApp::draw(){
     ofScale((float)ofGetWidth() / (float)grayDiff.width, (float)ofGetHeight() / (float)grayDiff.height);
     // show original color img
     ofSetColor(255, 255, 255);
-    colorImg.draw(0,0);
+    if (flag) {
+        colorImg.draw(0,0);
+    } else {
+        grayDiff.draw(0,0);
+    }
     // show contours
     contourFinder.draw();
     // boundary circles
@@ -118,6 +124,12 @@ void ofApp::keyPressed(int key){
         case '-':
             threshold--;
             if (threshold < 0) threshold = 0;
+            break;
+        case 'b':
+            flag=0;
+            break;
+        case 'c':
+            flag=1;
             break;
     }
 }
