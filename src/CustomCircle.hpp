@@ -11,7 +11,6 @@
 #include "ofMain.h"
 #include "ofxBox2d.h"
 
-// define Class customCircle by Inheritting ofxBox2dCircle
 class CustomCircle : public ofxBox2dCircle {
 public:
     void draw();

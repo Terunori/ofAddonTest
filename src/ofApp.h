@@ -1,6 +1,9 @@
 #pragma once
 
 #include "ofMain.h"
+#include "ofxOpenCv.h"
+#include "ofxBox2d.h"
+#include "CustomCircle.hpp"
 
 class ofApp : public ofBaseApp{
 
@@ -21,4 +24,22 @@ class ofApp : public ofBaseApp{
 		void dragEvent(ofDragInfo dragInfo);
 		void gotMessage(ofMessage msg);
 		
+    // for openCV
+    // video input
+    ofVideoGrabber vidGrabber;
+    //image
+    ofxCvColorImage colorImg;
+    ofxCvGrayscaleImage grayImg;
+    ofxCvGrayscaleImage grayBg;
+    ofxCvGrayscaleImage grayDiff;
+    // contour
+    ofxCvContourFinder contourFinder;
+    // record background?
+    bool bLearnBakGround;
+    int threshold;
+    
+    // for ofxBox2D
+    ofxBox2d box2d;
+    vector <shared_ptr<ofxBox2dCircle> > circles;
+    vector <shared_ptr<ofxBox2dCircle> > contourCircles;
 };
